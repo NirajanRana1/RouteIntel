@@ -1,0 +1,40 @@
+# ==========================
+# Python
+# ==========================
+__pycache__/
+*.py[cod]
+*.egg-info/
+
+# Virtual Environment
+.venv/
+venv/
+
+# macOS
+.DS_Store
+
+# VS Code
+.vscode/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Spark
+spark-warehouse/
+metastore_db/
+
+# ==========================
+# Data (Do NOT commit datasets)
+# ==========================
+data/raw/
+data/extracted/
+data/interim/
+data/processed/
+
+# Generated outputs
+outputs/
+
+# Models
+models/
+
+# Logs
+*.log
