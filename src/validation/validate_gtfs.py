@@ -1,33 +1,45 @@
+from pyspark.sql import DataFrame
+from pyspark.sql import functions as F
+
 from src.ingestion.load_gtfs import load_gtfs_tables
 
 
-def validate_tables():
+def validate_table(table_name: str, df: DataFrame) -> None:
     """
-    Generate a simple validation report for every GTFS table.
+    Validate a single GTFS table.
     """
 
-    dataframes = load_gtfs_tables()
+    print("\n" + "=" * 70)
+    print(f"TABLE: {table_name.upper()}")
+    print("=" * 70)
 
-    print("\n" + "=" * 60)
-    print("GTFS DATA VALIDATION REPORT")
-    print("=" * 60)
+    print(f"Rows    : {df.count():,}")
+    print(f"Columns : {len(df.columns)}")
 
-    for table_name, df in dataframes.items():
+    print("\nMissing Values")
 
-        print(f"\nTable: {table_name}")
-        print("-" * 40)
+    missing = df.select([
+        F.count(F.when(F.col(c).isNull(), c)).alias(c)
+        for c in df.columns
+    ])
 
-        print(f"Rows: {df.count():,}")
-        print(f"Columns: {len(df.columns)}")
+    missing.show(truncate=False)
 
-        print("\nSchema:")
-        df.printSchema()
+    print("\nSchema")
 
-        print("\nFirst 5 Records:")
-        df.show(5, truncate=False)
+    df.printSchema()
 
-    print("\nValidation Complete")
+
+def validate_gtfs():
+    """
+    Validate every GTFS table.
+    """
+
+    tables = load_gtfs_tables()
+
+    for table_name, df in tables.items():
+        validate_table(table_name, df)
 
 
 if __name__ == "__main__":
-    validate_tables()
+    validate_gtfs()
