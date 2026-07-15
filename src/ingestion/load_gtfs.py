@@ -8,26 +8,23 @@ from src.utils.spark_session import create_spark_session
 
 def load_gtfs_tables() -> dict[str, DataFrame]:
     """
-    Load every GTFS text file into a PySpark DataFrame.
+    Load all GTFS text files into Spark DataFrames.
     """
 
     spark = create_spark_session()
 
-    dataframes = {}
+    dataframes: dict[str, DataFrame] = {}
 
     txt_files = sorted(Path(GTFS_EXTRACTED_DIR).glob("*.txt"))
 
     if not txt_files:
-        print("No GTFS files found.")
-        return dataframes
-
-    print("\nLoading GTFS files...\n")
+        raise FileNotFoundError(
+            f"No GTFS files found in {GTFS_EXTRACTED_DIR}"
+        )
 
     for file in txt_files:
 
         table_name = file.stem
-
-        print(f"Loading {table_name}...")
 
         df = (
             spark.read
@@ -38,10 +35,6 @@ def load_gtfs_tables() -> dict[str, DataFrame]:
 
         dataframes[table_name] = df
 
-        print(f"Rows: {df.count():,}")
-        print(f"Columns: {len(df.columns)}")
-        print("-" * 40)
-
     return dataframes
 
 
@@ -49,9 +42,9 @@ def main():
 
     dfs = load_gtfs_tables()
 
-    print("\nLoaded Tables")
+    print("\nLoaded Tables\n")
 
-    for table in dfs:
+    for table in sorted(dfs):
         print(f"✓ {table}")
 
 
