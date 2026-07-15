@@ -1,19 +1,24 @@
 from pyspark.sql import SparkSession
 
-from src.config.settings import SPARK_APP_NAME
 
-
-def create_spark_session() -> SparkSession:
+def create_spark_session():
     """
-    Create and configure the Spark session.
+    Create and configure a local Spark session.
     """
 
     spark = (
         SparkSession.builder
-        .appName(SPARK_APP_NAME)
+        .appName("RouteIntel")
         .master("local[*]")
-        .config("spark.sql.shuffle.partitions", "4")
-        .config("spark.sql.repl.eagerEval.enabled", "true")
+
+        # Memory settings (recommended for 8GB RAM)
+        .config("spark.driver.memory", "4g")
+        .config("spark.executor.memory", "4g")
+
+        # Performance
+        .config("spark.sql.shuffle.partitions", "8")
+        .config("spark.sql.adaptive.enabled", "true")
+
         .getOrCreate()
     )
 

@@ -33,3 +33,32 @@ DATABASE_DIR = PROJECT_ROOT / "database"
 
 APP_NAME = "RouteIntel"
 SPARK_APP_NAME = "RouteIntel"
+
+
+# ==========================================================
+# PROJECT
+# ==========================================================
+
+PROJECT_NAME = "RouteIntel"
+SPARK_APP_NAME = PROJECT_NAME
+
+# ==========================================================
+# PARQUET SETTINGS
+# ==========================================================
+
+PARQUET_OUTPUT_DIR = PROCESSED_DATA_DIR / "parquet"
+
+PARQUET_WRITE_MODE = "overwrite"
+
+PARQUET_COMPRESSION = "snappy"
+
+
+# ==========================================================
+# REPORTS
+# ==========================================================
+
+REPORT_OUTPUT_DIR = "outputs/reports"
+
+PROFILE_OUTPUT_DIR = "outputs/data_profiles"
+
+LOG_OUTPUT_DIR = "outputs/logs"
