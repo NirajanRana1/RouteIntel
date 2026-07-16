@@ -3,7 +3,7 @@ from pyspark.sql import SparkSession
 
 def create_spark_session():
     """
-    Create and configure a local Spark session.
+    Create and configure Spark session.
     """
 
     spark = (
@@ -11,17 +11,30 @@ def create_spark_session():
         .appName("RouteIntel")
         .master("local[*]")
 
-        # Memory settings (recommended for 8GB RAM)
+        # Memory
         .config("spark.driver.memory", "4g")
         .config("spark.executor.memory", "4g")
 
         # Performance
-        .config("spark.sql.shuffle.partitions", "8")
+        .config("spark.sql.shuffle.partitions", "4")
         .config("spark.sql.adaptive.enabled", "true")
 
         .getOrCreate()
     )
 
     spark.sparkContext.setLogLevel("WARN")
+
+    return spark
+
+
+def get_spark():
+    """
+    Return existing Spark session if available.
+    """
+
+    spark = SparkSession.getActiveSession()
+
+    if spark is None:
+        spark = create_spark_session()
 
     return spark
